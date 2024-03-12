@@ -29,9 +29,11 @@ import com.nuncsystems.cameraapp.util.CapturerState
 import com.nuncsystems.cameraapp.util.OutputOptionsProvider
 import com.nuncsystems.cameraapp.util.isAtLeastP
 import com.nuncsystems.cameraapp.util.showToast
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+@AndroidEntryPoint
 class VideoCapturerActivity : AppCompatActivity() {
 
     companion object {

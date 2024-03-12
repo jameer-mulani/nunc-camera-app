@@ -3,6 +3,7 @@
     <dimen name="video_capture_control_size">48dp</dimen>
     <dimen name="record_video_control_size">64dp</dimen>
     <dimen name="video_capture_control_elevation">12dp</dimen>
-    <dimen name="video_thumbnail_size">96dp</dimen>
+    <dimen name="video_thumbnail_size">48dp</dimen>
+    <dimen name="card_elevation">12dp</dimen>
 
 </resources>

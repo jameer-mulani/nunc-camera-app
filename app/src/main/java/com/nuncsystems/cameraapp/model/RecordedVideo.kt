@@ -1,3 +1,5 @@
 package com.nuncsystems.cameraapp.model
 
-data class RecordedVideo(val name: String)
+import android.net.Uri
+
+data class RecordedVideo(val name: String, val filePath : String = "", val contentUri : Uri? = null)
