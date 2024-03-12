@@ -3,16 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/SecondFragment">
+    app:startDestination="@id/FirstFragment">
 
     <fragment
         android:id="@+id/FirstFragment"
-        android:name="com.nuncsystems.cameraapp.VideoListFragment"
+        android:name="com.nuncsystems.cameraapp.videolist.VideoListFragment"
         android:label="@string/video_list_fragment_label"
         tools:layout="@layout/fragment_video_list">
 
         <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
+            android:id="@+id/action_VideoListFragment_to_VideoCapturerFragment"
             app:destination="@id/SecondFragment" />
     </fragment>
     <fragment
@@ -20,9 +20,5 @@
         android:name="com.nuncsystems.cameraapp.VideoCaptureFragment"
         android:label="@string/capture_video_fragment_label"
         tools:layout="@layout/fragment_video_capture">
-
-        <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
     </fragment>
 </navigation>

@@ -4,7 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <import type="android.view.View"/>
+        <variable
+            name="isListEmpty"
+            type="Boolean" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -35,13 +38,17 @@
             android:layout_marginTop="?attr/actionBarSize"
             android:fitsSystemWindows="true"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:context=".VideoListFragment">
+            tools:context=".videolist.VideoListFragment">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/videoList"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:visibility="@{isListEmpty ? View.GONE : View.VISIBLE}"/>
 
+            <include layout="@layout/empty_video_list_view"
+                android:visibility="@{isListEmpty ? View.VISIBLE : View.GONE}"
+                />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
