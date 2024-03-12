@@ -15,6 +15,9 @@ class VideoListAdapter @Inject constructor(private val glide: RequestManager) :
     RecyclerView.Adapter<VideoListAdapter.ItemViewHolder>() {
 
     var items: List<RecordedVideo> = emptyList()
+
+    var onItemClickListener : ((RecordedVideo)->Unit)? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.video_list_item, parent, false)
@@ -26,12 +29,17 @@ class VideoListAdapter @Inject constructor(private val glide: RequestManager) :
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = items[position]
-        holder.bind(item)
+        holder.bind(item, onItemClickListener)
     }
 
     class ItemViewHolder(private val binding: VideoListItemBinding, val glide: RequestManager) :
         ViewHolder(binding.root) {
-        fun bind(item: RecordedVideo) {
+        fun bind(item: RecordedVideo, onItemClickListener : ((RecordedVideo)->Unit)?) {
+            binding.root.setOnClickListener {
+                onItemClickListener?.run {
+                    invoke(item)
+                }
+            }
             binding.videoName.text = item.name
             if (isAtLeastP()){
                 glide.load(item.filePath).into(binding.thumbnail)
