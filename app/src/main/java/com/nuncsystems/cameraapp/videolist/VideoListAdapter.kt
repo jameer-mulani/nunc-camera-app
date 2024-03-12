@@ -40,7 +40,5 @@ class VideoListAdapter @Inject constructor(private val glide: RequestManager) :
             }
             binding.executePendingBindings()
         }
-
     }
-
 }

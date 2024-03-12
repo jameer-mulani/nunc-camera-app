@@ -21,10 +21,6 @@ class OsPAndBelowRecordedVideoLoader : RecordedVideoLoader {
     override fun loadData(): List<RecordedVideo> {
         val downloadDirectory =
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-        val mimeTypeFilter = { f: File ->
-            val extension = MimeTypeMap.getFileExtensionFromUrl(f.path)
-
-        }
         val files = downloadDirectory.listFiles()
         val recordedFiles = files?.map { f: File ->
             RecordedVideo(name = f.name, filePath = f.path)

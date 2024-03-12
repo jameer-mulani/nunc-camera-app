@@ -161,7 +161,7 @@ class VideoCapturerActivity : AppCompatActivity() {
     }
 
     private fun hasAllPermissionsGranted() =
-        VideoCapturerActivity.REQUIRED_PERMISSIONS.all { eachPermission ->
+        REQUIRED_PERMISSIONS.all { eachPermission ->
             ContextCompat.checkSelfPermission(
                 this,
                 eachPermission
@@ -185,7 +185,7 @@ class VideoCapturerActivity : AppCompatActivity() {
         } catch (e: Exception) {
             val message = "Failed to pause video : ${e.message}"
             showToast(message)
-            Log.e(VideoCapturerActivity.TAG, message, e)
+            Log.e(TAG, message, e)
         }
     }
 
@@ -196,7 +196,7 @@ class VideoCapturerActivity : AppCompatActivity() {
         } catch (e: Exception) {
             val message = "Failed to resume video : ${e.message}"
             showToast(message)
-            Log.e(VideoCapturerActivity.TAG, message, e)
+            Log.e(TAG, message, e)
         }
     }
 
@@ -272,7 +272,7 @@ class VideoCapturerActivity : AppCompatActivity() {
                             val mesg =
                                 "Failed to record video : ErrorCode : ${videoRecordEvent.error}"
                             showToast(mesg)
-                            Log.e(VideoCapturerActivity.TAG, mesg)
+                            Log.e(TAG, mesg)
                         }
                         currentCapturerState = CapturerState.Stopped
                         binding?.run {

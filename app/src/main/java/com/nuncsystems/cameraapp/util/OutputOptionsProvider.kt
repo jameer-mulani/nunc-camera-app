@@ -11,7 +11,6 @@ import androidx.camera.video.MediaStoreOutputOptions
 import java.io.File
 
 class OutputOptionsProvider(private val context: Context) {
-
     fun getFileOutputOption(filename: String): FileOutputOptions {
         val file = File(
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
