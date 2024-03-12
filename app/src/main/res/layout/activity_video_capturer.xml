@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="flashSelectedState"
+            type="Boolean" />
+
+        <variable
+            name="pauseSelectedState"
+            type="Boolean" />
+
+        <variable
+            name="captureSelectedState"
+            type="Boolean" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".VideoCaptureFragment">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/video_capture_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="26dp"
+            android:background="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <!--<Chronometer
+                    android:id="@+id/chronometer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />-->
+
+                <com.nuncsystems.cameraapp.view.CapturerChronometer
+                    android:id="@+id/chronometer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+        </com.google.android.material.appbar.MaterialToolbar>
+
+        <androidx.camera.view.PreviewView
+            android:id="@+id/previewView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/video_capture_toolbar" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:baselineAligned="false"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <LinearLayout
+                android:layout_width="@dimen/video_capture_control_size"
+                android:layout_height="@dimen/video_capture_control_size"
+                android:layout_weight="1"
+                android:elevation="@dimen/video_capture_control_elevation"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <FrameLayout
+                    android:id="@+id/flash_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:visibility="@{captureSelectedState ? View.GONE : View.VISIBLE}">
+
+                    <ImageView
+                        android:id="@+id/flash_button_iv"
+                        isSelected="@{flashSelectedState}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:contentDescription="@string/flash_on"
+                        android:src="@drawable/flash_ic_selector" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/pause_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:visibility="@{captureSelectedState ? View.VISIBLE : View.GONE}">
+
+                    <ImageView
+                        android:id="@+id/pause_button_iv"
+                        isSelected="@{pauseSelectedState}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:contentDescription="@string/pause_video"
+                        android:src="@drawable/pause_video_ic_selector" />
+                </FrameLayout>
+
+
+            </LinearLayout>
+
+
+            <FrameLayout
+                android:id="@+id/video_capture_button"
+                android:layout_width="@dimen/record_video_control_size"
+                android:layout_height="@dimen/record_video_control_size"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:elevation="@dimen/video_capture_control_elevation"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <ImageView
+                    android:id="@+id/video_capture_button_iv"
+                    isSelected="@{captureSelectedState}"
+                    android:layout_width="@dimen/record_video_control_size"
+                    android:layout_height="@dimen/record_video_control_size"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/record_video"
+                    android:src="@drawable/record_video_ic_selector" />
+            </FrameLayout>
+
+
+            <FrameLayout
+                android:id="@+id/switch_camera_button"
+                android:layout_width="@dimen/record_video_control_size"
+                android:layout_height="@dimen/record_video_control_size"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:elevation="@dimen/video_capture_control_elevation"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:visibility="@{captureSelectedState ? View.GONE : View.VISIBLE}">
+
+                <ImageView
+                    android:id="@+id/switch_camera_button_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/switch_camera"
+                    android:src="@drawable/change_circle" />
+            </FrameLayout>
+
+
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

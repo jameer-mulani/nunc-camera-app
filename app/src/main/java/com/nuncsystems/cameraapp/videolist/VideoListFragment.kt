@@ -39,7 +39,7 @@ class VideoListFragment : Fragment() {
         binding.run {
             binding.isListEmpty = videoListAdapter.items.isEmpty()
             fab.setOnClickListener {
-                findNavController().navigate(R.id.action_VideoListFragment_to_VideoCapturerFragment)
+                findNavController().navigate(R.id.action_FirstFragment_to_videoCapturerActivity)
             }
             toolbar.apply {
                 title = getString(R.string.video_list_fragment_label)

@@ -12,13 +12,13 @@
         tools:layout="@layout/fragment_video_list">
 
         <action
-            android:id="@+id/action_VideoListFragment_to_VideoCapturerFragment"
-            app:destination="@id/SecondFragment" />
+            android:id="@+id/action_FirstFragment_to_videoCapturerActivity"
+            app:destination="@id/videoCapturerActivity" />
     </fragment>
-    <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.nuncsystems.cameraapp.VideoCaptureFragment"
-        android:label="@string/capture_video_fragment_label"
-        tools:layout="@layout/fragment_video_capture">
-    </fragment>
+
+    <activity
+        android:id="@+id/videoCapturerActivity"
+        android:name="com.nuncsystems.cameraapp.VideoCapturerActivity"
+        android:label="VideoCapturerActivity"
+        tools:layout="@layout/activity_video_capturer"/>
 </navigation>
