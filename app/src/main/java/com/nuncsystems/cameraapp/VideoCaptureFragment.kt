@@ -1,11 +1,10 @@
 package com.nuncsystems.cameraapp
 
 import android.Manifest
-import android.content.ContentValues
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.SystemClock
-import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +16,7 @@ import androidx.camera.core.Preview
 import androidx.camera.core.TorchState
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.video.MediaStoreOutputOptions
+import androidx.camera.video.PendingRecording
 import androidx.camera.video.Quality
 import androidx.camera.video.QualitySelector
 import androidx.camera.video.Recorder
@@ -30,11 +30,11 @@ import com.google.common.util.concurrent.ListenableFuture
 import com.nuncsystems.cameraapp.databinding.FragmentVideoCaptureBinding
 import com.nuncsystems.cameraapp.databinding.FragmentVideoListBinding
 import com.nuncsystems.cameraapp.util.CapturerState
+import com.nuncsystems.cameraapp.util.OutputOptionsProvider
 import com.nuncsystems.cameraapp.util.isAtLeastP
 import com.nuncsystems.cameraapp.util.showToast
 import java.text.SimpleDateFormat
 import java.util.Locale
-import kotlin.math.log
 
 /**
  * Fragment renders the preview and capture the video.
@@ -194,6 +194,7 @@ class VideoCaptureFragment : Fragment() {
         }
     }
 
+    @SuppressLint("NewApi")
     private fun captureVideo(){
         val videoCapture = videoCapture ?: return
         binding.videoCaptureButton.isEnabled = false
@@ -204,23 +205,24 @@ class VideoCaptureFragment : Fragment() {
             recording = null
             return
         }
-
-        //lets create a fresh recording instance/session
         val name = SimpleDateFormat(FILENAME_FORMAT, Locale.US).format(System.currentTimeMillis())
-        val contentValues = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, name)
-            put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4")
-            if (!isAtLeastP()){
-                put(MediaStore.Video.Media.RELATIVE_PATH, "Movies/NUNC-Camera")
+        val outputOptionsProvider = OutputOptionsProvider(requireActivity())
+        val pendingRecording : PendingRecording = if (isAtLeastP()){
+            if (PermissionChecker.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PermissionChecker.PERMISSION_GRANTED){
+                val outputOption = outputOptionsProvider.getFileOutputOption("$name.mp4")
+                videoCapture.output.prepareRecording(requireActivity(), outputOption)
+            }else{
+                val message = "Please grant the storage permission"
+                requireContext().showToast(message)
+                return
             }
+        }else{
+            val mediaStoreOutputOptions = outputOptionsProvider.getMediaStoreOutputOption(name)
+            videoCapture.output.prepareRecording(requireActivity(), mediaStoreOutputOptions)
         }
 
-        val mediaStoreOutputOptions = MediaStoreOutputOptions.Builder(
-            requireActivity().contentResolver, MediaStore.Video.Media.EXTERNAL_CONTENT_URI
-        ).setContentValues(contentValues)
-            .build()
-
-        recording = videoCapture.output.prepareRecording(requireActivity(), mediaStoreOutputOptions)
+        //lets create a fresh recording instance/session
+        recording = pendingRecording
             .apply {
                 if (PermissionChecker.checkSelfPermission(requireActivity(), Manifest.permission.RECORD_AUDIO) == PermissionChecker.PERMISSION_GRANTED){
                     withAudioEnabled()
