@@ -44,10 +44,11 @@ class VideoCapturerActivity : AppCompatActivity() {
             Manifest.permission.RECORD_AUDIO,
         ).apply {
             if (isAtLeastP()) {
-               add( Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
             }
         }.toTypedArray()
     }
+
     private lateinit var binding: ActivityVideoCapturerBinding
     private var currentCameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
     private var currentTorchState = TorchState.OFF
@@ -75,6 +76,7 @@ class VideoCapturerActivity : AppCompatActivity() {
         currentTorchState = state
         binding.flashSelectedState = state == TorchState.ON
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityVideoCapturerBinding.inflate(layoutInflater)
@@ -82,8 +84,13 @@ class VideoCapturerActivity : AppCompatActivity() {
         initViews()
     }
 
-    private fun initViews(){
-        binding.switchCameraButton.setOnClickListener { switchCamera() }
+    private fun initViews() {
+        binding.switchCameraButton.setOnClickListener {
+            validatePermission(
+                Manifest.permission.CAMERA,
+                ::switchCamera
+            )
+        }
         binding.flashButton.setOnClickListener {
             if (!hasFlashLight) {
                 showToast("Flash light is not supported on this device")
@@ -92,34 +99,47 @@ class VideoCapturerActivity : AppCompatActivity() {
             }
         }
         binding.videoCaptureButton.setOnClickListener {
-//            val isSelected = it.isSelected
-//            it.isSelected = !it.isSelected
-//            binding.captureSelectedState = !isSelected
-            captureVideo()
+            validatePermission(Manifest.permission.CAMERA, ::captureVideo)
         }
         binding.pauseButton.setOnClickListener {
-            emitPauseResumeState()
-            when(currentCapturerState){
-                CapturerState.Resumed -> {
-                    binding.chronometer.pause()
-                    pauseVideo()
-                    currentCapturerState = CapturerState.Paused
-                    emitPauseResumeState()
-                }
-                CapturerState.Paused ->{
-                    binding.chronometer.resume()
-                    resumeVideo()
-                    currentCapturerState = CapturerState.Resumed
-                    emitPauseResumeState()
-                }
-                CapturerState.Stopped -> {
-                    //no-ops
+            validatePermission(Manifest.permission.CAMERA){
+                emitPauseResumeState()
+                when (currentCapturerState) {
+                    CapturerState.Resumed -> {
+                        binding.chronometer.pause()
+                        pauseVideo()
+                        currentCapturerState = CapturerState.Paused
+                        emitPauseResumeState()
+                    }
+
+                    CapturerState.Paused -> {
+                        binding.chronometer.resume()
+                        resumeVideo()
+                        currentCapturerState = CapturerState.Resumed
+                        emitPauseResumeState()
+                    }
+
+                    CapturerState.Stopped -> {
+                        //no-ops
+                    }
                 }
             }
         }
     }
 
-    private fun emitPauseResumeState(){
+    private fun validatePermission(permission: String, block: () -> Unit) {
+        if (PermissionChecker.checkSelfPermission(
+                this,
+                permission
+            ) == PermissionChecker.PERMISSION_GRANTED
+        ) {
+            block()
+        } else {
+            showToast("Please grant the permission")
+        }
+    }
+
+    private fun emitPauseResumeState() {
         binding.pauseSelectedState = currentCapturerState == CapturerState.Paused
     }
 
@@ -140,12 +160,13 @@ class VideoCapturerActivity : AppCompatActivity() {
         )
     }
 
-    private fun hasAllPermissionsGranted() = VideoCapturerActivity.REQUIRED_PERMISSIONS.all { eachPermission ->
-        ContextCompat.checkSelfPermission(
-            this,
-            eachPermission
-        ) == PackageManager.PERMISSION_GRANTED
-    }
+    private fun hasAllPermissionsGranted() =
+        VideoCapturerActivity.REQUIRED_PERMISSIONS.all { eachPermission ->
+            ContextCompat.checkSelfPermission(
+                this,
+                eachPermission
+            ) == PackageManager.PERMISSION_GRANTED
+        }
 
     private fun requestPermissions() {
         permissionLauncher.launch(VideoCapturerActivity.REQUIRED_PERMISSIONS)
@@ -157,51 +178,58 @@ class VideoCapturerActivity : AppCompatActivity() {
         startCamera()
     }
 
-    private fun pauseVideo(){
+    private fun pauseVideo() {
         val currentRecording = recording ?: return
         try {
             currentRecording.pause()
-        }catch (e :Exception){
+        } catch (e: Exception) {
             val message = "Failed to pause video : ${e.message}"
             showToast(message)
-            Log.e(VideoCapturerActivity.TAG, message,e)
+            Log.e(VideoCapturerActivity.TAG, message, e)
         }
     }
 
-    private fun resumeVideo(){
+    private fun resumeVideo() {
         val currentRecording = recording ?: return
         try {
             currentRecording.resume()
-        }catch (e : Exception){
+        } catch (e: Exception) {
             val message = "Failed to resume video : ${e.message}"
             showToast(message)
-            Log.e(VideoCapturerActivity.TAG, message,e)
+            Log.e(VideoCapturerActivity.TAG, message, e)
         }
     }
 
     @SuppressLint("NewApi")
-    private fun captureVideo(){
+    private fun captureVideo() {
         val videoCapture = videoCapture ?: return
         binding.videoCaptureButton.isEnabled = false
         val ongoingRecording = recording
-        if (ongoingRecording != null){
+        if (ongoingRecording != null) {
             //it detected that some last ongoing recording is still going on, lets stop and return from here only
             ongoingRecording.stop()
             recording = null
             return
         }
-        val name = SimpleDateFormat(VideoCapturerActivity.FILENAME_FORMAT, Locale.US).format(System.currentTimeMillis())
+        val name = SimpleDateFormat(
+            VideoCapturerActivity.FILENAME_FORMAT,
+            Locale.US
+        ).format(System.currentTimeMillis())
         val outputOptionsProvider = OutputOptionsProvider(this)
-        val pendingRecording : PendingRecording = if (isAtLeastP()){
-            if (PermissionChecker.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PermissionChecker.PERMISSION_GRANTED){
+        val pendingRecording: PendingRecording = if (isAtLeastP()) {
+            if (PermissionChecker.checkSelfPermission(
+                    this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) == PermissionChecker.PERMISSION_GRANTED
+            ) {
                 val outputOption = outputOptionsProvider.getFileOutputOption("$name.mp4")
                 videoCapture.output.prepareRecording(this, outputOption)
-            }else{
+            } else {
                 val message = "Please grant the storage permission"
                 showToast(message)
                 return
             }
-        }else{
+        } else {
             val mediaStoreOutputOptions = outputOptionsProvider.getMediaStoreOutputOption(name)
             videoCapture.output.prepareRecording(this, mediaStoreOutputOptions)
         }
@@ -209,11 +237,15 @@ class VideoCapturerActivity : AppCompatActivity() {
         //lets create a fresh recording instance/session
         recording = pendingRecording
             .apply {
-                if (PermissionChecker.checkSelfPermission(this@VideoCapturerActivity, Manifest.permission.RECORD_AUDIO) == PermissionChecker.PERMISSION_GRANTED){
+                if (PermissionChecker.checkSelfPermission(
+                        this@VideoCapturerActivity,
+                        Manifest.permission.RECORD_AUDIO
+                    ) == PermissionChecker.PERMISSION_GRANTED
+                ) {
                     withAudioEnabled()
                 }
-            }.start(ContextCompat.getMainExecutor(this)){videoRecordEvent->
-                when(videoRecordEvent){
+            }.start(ContextCompat.getMainExecutor(this)) { videoRecordEvent ->
+                when (videoRecordEvent) {
                     is VideoRecordEvent.Start -> {
                         binding.chronometer.apply {
                             base = SystemClock.elapsedRealtime()
@@ -226,17 +258,19 @@ class VideoCapturerActivity : AppCompatActivity() {
                         }
                     }
 
-                    is VideoRecordEvent.Finalize ->{
-                        if (!videoRecordEvent.hasError()){
+                    is VideoRecordEvent.Finalize -> {
+                        if (!videoRecordEvent.hasError()) {
                             //we have successfully recorded vide
-                            val mesg = "Video capture successfully : ${videoRecordEvent.outputResults.outputUri}"
+                            val mesg =
+                                "Video capture successfully : ${videoRecordEvent.outputResults.outputUri}"
                             showToast(mesg)
                             Log.d(VideoCapturerActivity.TAG, mesg)
-                        }else{
+                        } else {
                             //we failed here to record
                             recording?.close()
                             recording = null
-                            val mesg = "Failed to record video : ErrorCode : ${videoRecordEvent.error}"
+                            val mesg =
+                                "Failed to record video : ErrorCode : ${videoRecordEvent.error}"
                             showToast(mesg)
                             Log.e(VideoCapturerActivity.TAG, mesg)
                         }
@@ -249,7 +283,7 @@ class VideoCapturerActivity : AppCompatActivity() {
                             base = SystemClock.elapsedRealtime()
                             stop()
                         }
-                        if (currentTorchState == TorchState.ON){
+                        if (currentTorchState == TorchState.ON) {
                             cameraControl?.enableTorch(false)
                         }
                     }
@@ -288,17 +322,21 @@ class VideoCapturerActivity : AppCompatActivity() {
                 )
                 hasFlashLight = camera.cameraInfo.hasFlashUnit()
                 if (hasFlashLight) {
-                    camera.cameraInfo.torchState.observe(this@VideoCapturerActivity, torchStateObserver)
+                    camera.cameraInfo.torchState.observe(
+                        this@VideoCapturerActivity,
+                        torchStateObserver
+                    )
                 }
                 cameraControl = camera.cameraControl
             } catch (e: Exception) {
-                Log.e(VideoCapturerActivity.TAG, "Failed to bind cameraProvider to lifecycle: ${e.message}", e)
+                Log.e(
+                    VideoCapturerActivity.TAG,
+                    "Failed to bind cameraProvider to lifecycle: ${e.message}",
+                    e
+                )
             }
         }
     }
-    
-    
-    
-    
+
 
 }
