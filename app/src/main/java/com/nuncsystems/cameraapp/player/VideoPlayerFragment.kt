@@ -1,5 +1,6 @@
 package com.nuncsystems.cameraapp.player
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +14,9 @@ import androidx.media3.exoplayer.ExoPlayer
 import com.nuncsystems.cameraapp.R
 import com.nuncsystems.cameraapp.databinding.FragmentVideoPlayerBinding
 import com.nuncsystems.cameraapp.util.isAtLeastM
+import com.nuncsystems.cameraapp.util.isAtLeastP
 import com.nuncsystems.cameraapp.util.isGreaterThanM
+import java.io.File
 
 
 class VideoPlayerFragment : Fragment() {
@@ -47,7 +50,13 @@ class VideoPlayerFragment : Fragment() {
         player = ExoPlayer.Builder(requireActivity())
             .build().also { player ->
                 binding.playerView.player = player
-                val mediaItem = mediaToPlay?.let { MediaItem.fromUri(it) }
+                val mediaItem = mediaToPlay?.let {
+                    if (isAtLeastP()){
+                        MediaItem.fromUri(Uri.fromFile(File(it)))
+                    }else{
+                        MediaItem.fromUri(it)
+                    }
+                }
                 mediaItem?.let { player.setMediaItem(it) }
                 player.prepare()
             }
