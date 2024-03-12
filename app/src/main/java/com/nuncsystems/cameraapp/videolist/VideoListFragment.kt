@@ -1,9 +1,11 @@
 package com.nuncsystems.cameraapp.videolist
 
+import android.Manifest
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -11,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.nuncsystems.cameraapp.R
 import com.nuncsystems.cameraapp.databinding.FragmentVideoListBinding
 import com.nuncsystems.cameraapp.util.isAtLeastP
+import com.nuncsystems.cameraapp.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -21,11 +24,26 @@ import javax.inject.Inject
 class VideoListFragment @Inject constructor(private val videoListAdapter: VideoListAdapter): Fragment() {
     companion object {
         private const val TAG = "VideoListFragment"
+        private val REQUIRED_PERMISSIONS = mutableListOf<String>().also {
+            if (isAtLeastP()){
+                it.add(Manifest.permission.READ_EXTERNAL_STORAGE)
+            }
+        }.toTypedArray()
     }
-
-//    @Inject
-//    lateinit var videoListAdapter: VideoListAdapter
-
+    private val permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){permission->
+        var hasAllPermissionGranted = true
+        permission.entries.forEach {eachPermission->
+            if (eachPermission.key in REQUIRED_PERMISSIONS && !eachPermission.value){
+                hasAllPermissionGranted = false
+            }
+        }
+        if (!hasAllPermissionGranted){
+            val message = "Please grant permission."
+            requireActivity().showToast(message)
+        }else{
+            subscribeToVideoListDataInternal()
+        }
+    }
     private var binding: FragmentVideoListBinding? = null
     private lateinit var videoListViewModel: VideoListViewModel
 
@@ -55,7 +73,15 @@ class VideoListFragment @Inject constructor(private val videoListAdapter: VideoL
             }
         }
 
+        subscribeToVideoListData()
+    }
 
+    private fun subscribeToVideoListData(){
+        if (isAtLeastP()){
+            permissionLauncher.launch(REQUIRED_PERMISSIONS)
+        }else{
+            subscribeToVideoListDataInternal()
+        }
     }
 
     override fun onStart() {
@@ -68,7 +94,7 @@ class VideoListFragment @Inject constructor(private val videoListAdapter: VideoL
         binding = null
     }
 
-    private fun subscribeToVideoListData() {
+    private fun subscribeToVideoListDataInternal() {
         videoListViewModel.videoListLiveData.observe(requireActivity()) {
             binding?.isListEmpty = it.isEmpty()
             videoListAdapter.apply {

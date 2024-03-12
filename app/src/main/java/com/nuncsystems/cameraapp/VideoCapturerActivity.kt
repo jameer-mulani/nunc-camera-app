@@ -44,7 +44,7 @@ class VideoCapturerActivity : AppCompatActivity() {
             Manifest.permission.RECORD_AUDIO,
         ).apply {
             if (isAtLeastP()) {
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
+               add( Manifest.permission.WRITE_EXTERNAL_STORAGE)
             }
         }.toTypedArray()
     }

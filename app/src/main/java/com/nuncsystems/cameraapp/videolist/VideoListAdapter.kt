@@ -8,6 +8,7 @@ import com.bumptech.glide.RequestManager
 import com.nuncsystems.cameraapp.R
 import com.nuncsystems.cameraapp.databinding.VideoListItemBinding
 import com.nuncsystems.cameraapp.model.RecordedVideo
+import com.nuncsystems.cameraapp.util.isAtLeastP
 import javax.inject.Inject
 
 class VideoListAdapter @Inject constructor(private val glide: RequestManager) :
@@ -32,7 +33,11 @@ class VideoListAdapter @Inject constructor(private val glide: RequestManager) :
         ViewHolder(binding.root) {
         fun bind(item: RecordedVideo) {
             binding.videoName.text = item.name
-            glide.load(item.contentUri).into(binding.thumbnail)
+            if (isAtLeastP()){
+                glide.load(item.filePath).into(binding.thumbnail)
+            }else{
+                glide.load(item.contentUri).into(binding.thumbnail)
+            }
             binding.executePendingBindings()
         }
 
