@@ -1,3 +1,7 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="video_capture_control_size">48dp</dimen>
+    <dimen name="record_video_control_size">64dp</dimen>
+    <dimen name="video_capture_control_elevation">12dp</dimen>
+
 </resources>

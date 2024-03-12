@@ -3,4 +3,7 @@
     <string name="record_video">Record video</string>
     <string name="video_list_fragment_label">Video List</string>
     <string name="capture_video_fragment_label">Video List</string>
+    <string name="flash_on">flash on</string>
+    <string name="switch_camera">switch camera</string>
+    <string name="pause_video">pause video</string>
 </resources>
