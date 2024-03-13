@@ -17,10 +17,9 @@ interface RecordedVideoLoader {
     fun loadData(): List<RecordedVideo>
 }
 
-class OsPAndBelowRecordedVideoLoader : RecordedVideoLoader {
+class OsPAndBelowRecordedVideoLoader(private val file : File) : RecordedVideoLoader {
     override fun loadData(): List<RecordedVideo> {
-        val downloadDirectory =
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+        val downloadDirectory = file
         val files = downloadDirectory.listFiles()
         val recordedFiles = files?.map { f: File ->
             RecordedVideo(name = f.name, filePath = f.path)

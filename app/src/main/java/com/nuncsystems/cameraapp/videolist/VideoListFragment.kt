@@ -113,9 +113,6 @@ class VideoListFragment @Inject constructor(private val videoListAdapter: VideoL
             }
         }
         videoListViewModel.also {
-            if (!isAtLeastP()) {
-                it.contentResolver = requireActivity().contentResolver
-            }
             it.loadData()
         }
     }

@@ -21,7 +21,7 @@
 
     <activity
         android:id="@+id/videoCapturerActivity"
-        android:name="com.nuncsystems.cameraapp.VideoCapturerActivity"
+        android:name="com.nuncsystems.cameraapp.capturer.VideoCapturerActivity"
         android:label="VideoCapturerActivity"
         tools:layout="@layout/activity_video_capturer"/>
     <fragment

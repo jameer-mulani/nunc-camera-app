@@ -1,4 +1,4 @@
-package com.nuncsystems.cameraapp
+package com.nuncsystems.cameraapp.capturer
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -24,7 +24,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.PermissionChecker
 import com.google.common.util.concurrent.ListenableFuture
 import com.nuncsystems.cameraapp.databinding.ActivityVideoCapturerBinding
-import com.nuncsystems.cameraapp.databinding.FragmentVideoCaptureBinding
 import com.nuncsystems.cameraapp.util.CapturerState
 import com.nuncsystems.cameraapp.util.OutputOptionsProvider
 import com.nuncsystems.cameraapp.util.isAtLeastP
@@ -61,7 +60,7 @@ class VideoCapturerActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             var hasAllPermissionGranted = true
             permissions.entries.forEach { permission ->
-                if (permission.key in VideoCapturerActivity.REQUIRED_PERMISSIONS && !permission.value) {
+                if (permission.key in REQUIRED_PERMISSIONS && !permission.value) {
                     hasAllPermissionGranted = false
                 }
             }
@@ -169,7 +168,7 @@ class VideoCapturerActivity : AppCompatActivity() {
         }
 
     private fun requestPermissions() {
-        permissionLauncher.launch(VideoCapturerActivity.REQUIRED_PERMISSIONS)
+        permissionLauncher.launch(REQUIRED_PERMISSIONS)
     }
 
     private fun switchCamera() {
@@ -212,7 +211,7 @@ class VideoCapturerActivity : AppCompatActivity() {
             return
         }
         val name = SimpleDateFormat(
-            VideoCapturerActivity.FILENAME_FORMAT,
+            FILENAME_FORMAT,
             Locale.US
         ).format(System.currentTimeMillis())
         val outputOptionsProvider = OutputOptionsProvider(this)
@@ -264,7 +263,7 @@ class VideoCapturerActivity : AppCompatActivity() {
                             val mesg =
                                 "Video capture successfully : ${videoRecordEvent.outputResults.outputUri}"
                             showToast(mesg)
-                            Log.d(VideoCapturerActivity.TAG, mesg)
+                            Log.d(TAG, mesg)
                         } else {
                             //we failed here to record
                             recording?.close()
@@ -330,7 +329,7 @@ class VideoCapturerActivity : AppCompatActivity() {
                 cameraControl = camera.cameraControl
             } catch (e: Exception) {
                 Log.e(
-                    VideoCapturerActivity.TAG,
+                    TAG,
                     "Failed to bind cameraProvider to lifecycle: ${e.message}",
                     e
                 )

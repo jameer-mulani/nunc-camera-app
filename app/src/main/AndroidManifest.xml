@@ -23,7 +23,7 @@
         android:theme="@style/Theme.CameraApp"
         tools:targetApi="31">
         <activity
-            android:name=".VideoCapturerActivity"
+            android:name=".capturer.VideoCapturerActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

@@ -23,5 +23,4 @@ object AppModule {
                 .placeholder(R.drawable.ic_camera)
                 .error(R.drawable.ic_launcher_foreground)
         )
-
 }
