@@ -280,7 +280,7 @@ class VideoCapturerActivity : AppCompatActivity() {
                         }
                         binding.chronometer.apply {
                             base = SystemClock.elapsedRealtime()
-                            stop()
+                            clearAnimationAndStop()
                         }
                         if (currentTorchState == TorchState.ON) {
                             cameraControl?.enableTorch(false)

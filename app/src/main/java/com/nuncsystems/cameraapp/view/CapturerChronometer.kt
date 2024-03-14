@@ -22,11 +22,20 @@ class CapturerChronometer(context: Context?, attrs: AttributeSet?) : Chronometer
     }
 
     fun resume(){
+        clearFadeAnimation()
         base = SystemClock.elapsedRealtime() + currentBase
+        start()
+    }
+
+    private fun clearFadeAnimation(){
         this.animation?.let {
             it.cancel()
             this.clearAnimation()
         }
-        start()
+    }
+
+    fun clearAnimationAndStop(){
+        clearFadeAnimation()
+        stop()
     }
 }
