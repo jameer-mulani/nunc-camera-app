@@ -106,10 +106,17 @@ class VideoListFragment @Inject constructor(private val videoListAdapter: VideoL
 
     private fun subscribeToVideoListDataInternal() {
         videoListViewModel.videoListLiveData.observe(requireActivity()) {
-            binding?.isListEmpty = it.isEmpty()
-            videoListAdapter.apply {
-                items = it
-                notifyDataSetChanged()
+            if (it.errorMessage != null){
+                //we got some error
+                if (isAdded && activity != null){
+                    requireContext().showToast(it.errorMessage)
+                }
+            }else{
+                binding?.isListEmpty = it.recordedVideos.isEmpty()
+                videoListAdapter.apply {
+                    items = it.recordedVideos
+                    notifyDataSetChanged()
+                }
             }
         }
         videoListViewModel.also {

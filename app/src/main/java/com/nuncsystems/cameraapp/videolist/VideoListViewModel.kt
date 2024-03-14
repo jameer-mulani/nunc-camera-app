@@ -2,6 +2,7 @@ package com.nuncsystems.cameraapp.videolist
 
 import android.annotation.SuppressLint
 import android.content.ContentResolver
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -31,8 +32,8 @@ class VideoListViewModel @Inject constructor(
 
     private val coroutineExceptionHandler =
         CoroutineExceptionHandler { _, throwable -> throwable.printStackTrace() }
-    private val _videoListLiveData: MutableLiveData<List<RecordedVideo>> = MutableLiveData()
-    val videoListLiveData: LiveData<List<RecordedVideo>> = _videoListLiveData
+    private val _videoListLiveData: MutableLiveData<VideoListScreenState> = MutableLiveData()
+    val videoListLiveData: LiveData<VideoListScreenState> = _videoListLiveData
 
     fun loadData() {
         viewModelScope.launch {
@@ -42,13 +43,19 @@ class VideoListViewModel @Inject constructor(
     }
 
     @SuppressLint("NewApi")
-    private suspend fun loadDataInternal(): List<RecordedVideo> {
-        return withContext(Dispatchers.IO + coroutineExceptionHandler) {
-            if (isAtLeastP()) {
-                return@withContext osPAndBelowRecordedVideoLoadUseCase(filePathForOs28AndBelow)
-            } else {
-                osPAndAboveRecordedVideoLoadUseCase(contentResolver)
+    private suspend fun loadDataInternal(): VideoListScreenState {
+        return try {
+            val list = withContext(Dispatchers.IO + coroutineExceptionHandler) {
+                if (isAtLeastP()) {
+                    return@withContext osPAndBelowRecordedVideoLoadUseCase(filePathForOs28AndBelow)
+                } else {
+                    osPAndAboveRecordedVideoLoadUseCase(contentResolver)
+                }
             }
+            VideoListScreenState(recordedVideos = list, errorMessage = null)
+        }catch (e : Exception){
+            Log.e(TAG, "loadData: ${e.message}", e )
+            VideoListScreenState(recordedVideos = emptyList(), errorMessage = e.message)
         }
     }
 
@@ -57,3 +64,5 @@ class VideoListViewModel @Inject constructor(
     }
 
 }
+
+data class VideoListScreenState(val recordedVideos : List<RecordedVideo> = emptyList(), val errorMessage : String? = null)
