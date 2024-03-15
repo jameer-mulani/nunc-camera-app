@@ -46,5 +46,6 @@
 5. Coroutine : uses to load the data asynchronously.
 6. CameraX: use to achieve camera releated functionalities.
 7. Exoplayer : uses to play in app video playing experience.
+8. Databinding : to bind xml and data.
 
 
