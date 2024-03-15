@@ -1,4 +1,4 @@
-### Camara Application made with **CameraX**, **Exoplayer**, designed by MVVM + Clean architecture.
+### Camara Application made with **CameraX** & **Exoplayer**, designed by MVVM + Clean architecture.
 
 **``App Version:1.0``**
 **``Min SDK:21``**
