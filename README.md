@@ -11,7 +11,7 @@
 4. Handling flash light.
 5. Switching camera between Front and Rear.
 6. Pausing recording session.
-7. Resuming recording sessio.
+7. Resuming recording session.
 8. Displaying recording session Timer.
 9. Save recorded files based on OS version.
 10. Loading and showing recorded files into the UI
