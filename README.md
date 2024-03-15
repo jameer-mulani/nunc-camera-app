@@ -39,7 +39,7 @@
 2. Plays the one of selected recorded file from video list screen.
 
 #### Tech stack:
-1. Navigation component: uses navgraph and navhost fragment for in app destination navigation
+1. Navigation component: uses navgraph and navhost fragment for in app destination navigation.
 2. Hilt : uses to provide dependency injection.
 3. Glide : uses to load video thumbnails.
 4. Lifecycle component : uses ViewModel and Livedata.
