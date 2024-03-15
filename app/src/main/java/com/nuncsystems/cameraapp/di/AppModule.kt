@@ -11,6 +11,9 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+/**
+ * Hilt module for app wide dependency provision.
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {

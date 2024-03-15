@@ -6,6 +6,9 @@ import android.util.AttributeSet
 import android.view.animation.AlphaAnimation
 import android.widget.Chronometer
 
+/**
+ * Subclass of [Chronometer] which supports additional behaviours like pause, resume and animate.
+ */
 class CapturerChronometer(context: Context?, attrs: AttributeSet?) : Chronometer(context, attrs) {
 
     private var currentBase : Long = SystemClock.elapsedRealtime()

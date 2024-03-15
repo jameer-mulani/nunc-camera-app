@@ -13,10 +13,21 @@ import androidx.core.database.getStringOrNull
 import com.nuncsystems.cameraapp.model.RecordedVideo
 import java.io.File
 
+/**
+ * Interface for loading the recorded video files.
+ */
 interface RecordedVideoLoader {
+
+    /**
+     * Loads the available files and returns the list of [RecordedVideo]
+     * @return list of [RecordedVideo]
+     */
     fun loadData(): List<RecordedVideo>
 }
 
+/**
+ * Implementation of [RecordedVideoLoader] which loads the list of [RecordedVideo] from the given directory for OS P and Below device.
+ */
 class OsPAndBelowRecordedVideoLoader(private val file : File) : RecordedVideoLoader {
     override fun loadData(): List<RecordedVideo> {
         val downloadDirectory = file
@@ -27,6 +38,11 @@ class OsPAndBelowRecordedVideoLoader(private val file : File) : RecordedVideoLoa
         return recordedFiles ?: emptyList()
     }
 }
+
+/**
+ * Implementation of [RecordedVideoLoader] which loads the list of [RecordedVideo] from the MediaStore.
+ * Support of OS Q and above.
+ */
 
 @RequiresApi(Build.VERSION_CODES.Q)
 class OsPAndAboveRecordedVideoLoader(private val contentResolver: ContentResolver/*, private val uri : Uri, private val projection : Array<String>*/) :

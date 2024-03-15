@@ -32,6 +32,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+/**
+ * Class responsible for recording feature in the camera app.
+ * It shows preview and other functionalities like recording, pausing, showing timer and switching camera.
+ */
 @AndroidEntryPoint
 class VideoCapturerActivity : AppCompatActivity() {
 
@@ -126,6 +130,9 @@ class VideoCapturerActivity : AppCompatActivity() {
         }
     }
 
+    /*
+        Validates a given permission before executing given block.
+     */
     private fun validatePermission(permission: String, block: () -> Unit) {
         if (PermissionChecker.checkSelfPermission(
                 this,
@@ -199,6 +206,9 @@ class VideoCapturerActivity : AppCompatActivity() {
         }
     }
 
+    /*
+        Records video.
+     */
     @SuppressLint("NewApi")
     private fun captureVideo() {
         val videoCapture = videoCapture ?: return

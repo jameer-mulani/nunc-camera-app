@@ -10,7 +10,16 @@ import androidx.camera.video.FileOutputOptions
 import androidx.camera.video.MediaStoreOutputOptions
 import java.io.File
 
+/**
+ * Provides recorded videos output options.
+ */
 class OutputOptionsProvider(private val context: Context) {
+    /**
+     * Returns the [FileOutputOptions] for recorded file, it records the file onto Downloads folder
+     * Useful for OS P and below device.
+     * @param filename name of file for the recording video
+     * @return instance of [FileOutputOptions]
+     */
     fun getFileOutputOption(filename: String): FileOutputOptions {
         val file = File(
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
@@ -19,6 +28,12 @@ class OutputOptionsProvider(private val context: Context) {
         return FileOutputOptions.Builder(file).build()
     }
 
+    /**
+     * Returns the [MediaStoreOutputOptions] for recorded file, it records the file and store it into the [MediaStore]
+     * Useful for OS Q and above device.
+     * @param filename name of file for the recording video
+     * @return instance of [MediaStoreOutputOptions]
+     */
     @RequiresApi(Build.VERSION_CODES.Q)
     fun getMediaStoreOutputOption(filename: String): MediaStoreOutputOptions {
         val contentValues = ContentValues().apply {

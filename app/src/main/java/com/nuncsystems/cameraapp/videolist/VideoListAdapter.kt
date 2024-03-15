@@ -11,6 +11,9 @@ import com.nuncsystems.cameraapp.model.RecordedVideo
 import com.nuncsystems.cameraapp.util.isAtLeastP
 import javax.inject.Inject
 
+/**
+ * Recyclerview adapter for showing the recorded videos.
+ */
 class VideoListAdapter @Inject constructor(private val glide: RequestManager) :
     RecyclerView.Adapter<VideoListAdapter.ItemViewHolder>() {
 

@@ -6,6 +6,9 @@ import com.nuncsystems.cameraapp.videolist.VideoListAdapter
 import com.nuncsystems.cameraapp.videolist.VideoListFragment
 import javax.inject.Inject
 
+/**
+ * Custom [FragmentFactory] so that fragment could be created with hilt provided dependencies.
+ */
 class AppFragmentFactory @Inject constructor(
     private val videoListAdapter: VideoListAdapter
 ) :FragmentFactory() {

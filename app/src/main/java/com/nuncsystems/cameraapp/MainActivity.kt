@@ -5,6 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.nuncsystems.cameraapp.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 
+/**
+ * Starting application activity.
+ */
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 

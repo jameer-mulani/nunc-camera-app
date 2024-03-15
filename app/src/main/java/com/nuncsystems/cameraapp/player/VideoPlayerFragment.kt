@@ -18,7 +18,9 @@ import com.nuncsystems.cameraapp.util.isAtLeastP
 import com.nuncsystems.cameraapp.util.isGreaterThanM
 import java.io.File
 
-
+/**
+ * [Fragment]  instance to play/pause given video.
+ */
 class VideoPlayerFragment : Fragment() {
 
 

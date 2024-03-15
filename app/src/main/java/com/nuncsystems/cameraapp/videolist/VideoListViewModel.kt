@@ -19,6 +19,9 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import javax.inject.Inject
 
+/**
+ * [ViewModel] instance to back the loading recorded videos.
+ */
 @HiltViewModel
 class VideoListViewModel @Inject constructor(
     private val osPAndBelowRecordedVideoLoadUseCase: OsPAndBelowRecordedVideoLoadUseCase,

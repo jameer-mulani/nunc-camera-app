@@ -6,6 +6,9 @@ import com.nuncsystems.cameraapp.view.AppFragmentFactory
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+/**
+ * Base extension to [NavHostFragment] so that FragmentFactory could inject
+ */
 @AndroidEntryPoint
 class BaseNavHostFragment : NavHostFragment() {
 
