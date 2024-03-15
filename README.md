@@ -14,7 +14,7 @@
 7. Resuming recording session.
 8. Displaying recording session Timer.
 9. Save recorded files based on OS version.
-10. Loading and showing recorded files into the UI
+10. Loading and showing recorded files into the UI.
 11. Playing recorded videos with inbuilt ExoPlayer.
 
 #### Screens(UI) Elements:
